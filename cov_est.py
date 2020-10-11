@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
 
 
 def sampleCov(X):
@@ -8,7 +9,9 @@ def sampleCov(X):
     :param X: an N*p matrix,
     :return: a p*p matrix, covariance matrix
     """
-    return np.cov(X, rowvar=False)
+    a = pd.DataFrame(X)
+    a = a - a.mean()
+    return a.cov().to_numpy()
 
 
 def constCorrCov(X, rho=None):
@@ -49,15 +52,21 @@ def multiFactorCov(X, f):
     :param f: an N*k matrix, k is the number of factors
     :return: a p*p matrix
     """
-    reg = LinearRegression()
-    reg.fit(f, X)
-    beta = reg.coef_
+    p = X.shape[1]
+    beta = []
+    for i in range(p):
+        mod = sm.OLS(f, X[:, i])
+        res = mod.fit()
+        beta.append(res.params[0])
+    beta = np.array(beta)
     f_cov = np.cov(f.T)
 
     u = X - f @ beta.T     # residual
     w = u.std(axis=0)**2
 
-    cov = beta @ f_cov @ beta.T + np.diag(w)
+    cov = np.matmul(beta, f_cov)
+    cov = np.matmul(cov, beta.T)
+    cov += np.diag(w)
     return cov
 
 

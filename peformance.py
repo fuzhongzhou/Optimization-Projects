@@ -54,7 +54,7 @@ def in_sample_eval(r, f=None):
         k = 20
         f_cov = np.random.randn(k)
         f_cov = f_cov.reshape((-1, 1))@f_cov.reshape((1, -1))
-        f_mean = np.random.randn(k)
+        f_mean = np.random.randn(k) + 10
         f = np.random.multivariate_normal(f_mean, f_cov, N)
 
     cov_F = multiFactorCov(r, f)
@@ -62,4 +62,6 @@ def in_sample_eval(r, f=None):
     ret_F = x_F@ret_mean
     sig_F = np.sqrt(x_F.T@cov_F@x_F)
     sr.append(ret_F/sig_F)
+
+    return sr
 

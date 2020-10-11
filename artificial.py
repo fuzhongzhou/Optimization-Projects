@@ -38,4 +38,5 @@ beta = np.random.randn(k, p) / 100
 u = np.random.randn(N, p) / 1000
 r = f @ beta + u
 
+
 print(0)
