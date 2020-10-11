@@ -8,8 +8,7 @@ def sampleCov(X):
     :param X: an N*p matrix,
     :return: a p*p matrix, covariance matrix
     """
-    X_mean = X.mean(axis=0)
-    return np.cov((X - X_mean).T)
+    return np.cov(X, rowvar=False)
 
 
 def constCorrCov(X, rho=None):
