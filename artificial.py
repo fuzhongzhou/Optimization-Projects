@@ -35,21 +35,10 @@ print(res_nonlinear)
 
 
 ''' with linear factor structure '''
-f_corr = pd.DataFrame(np.random.randn(20, k)).corr().to_numpy()
-f_sig = np.diag(np.random.uniform(0.01, 0.02, k))
-f_cov = f_sig @ f_corr @ f_sig
-f_start = np.random.uniform(-0.4, 0.4, k)
+f = r[:,np.random.choice(p,k)]
 
-f = np.zeros((N+1, k))
-f[0] = f_start
-z = np.random.multivariate_normal(np.zeros(k), f_cov, N)
-for i in range(N):
-    f[i+1] = f[i] + z[i]
-
-f = f[1:]
-# pl.plot(f)
-beta = np.random.uniform(-0.02, 0.02, (k, p))
-u = np.random.randn(N, p) / 100
+beta = np.random.uniform(-1, 1, (k, p))
+u = np.random.randn(N, p) / 1000
 r = f @ beta + u
 
 r_train = r[:train_index]

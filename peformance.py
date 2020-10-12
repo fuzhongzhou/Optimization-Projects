@@ -49,8 +49,7 @@ def risk_par_port(covmat):
     x0 = w0/(w0.T@covmat@w0)**0.5
     def optfunc(x):
         return (x.T@covmat@x/2-np.ones(N)@np.log(x)/N)**2
-        # return np.sum((covmat@x-1/(N*x))**2)
-    cons = {'type':'ineq','fun':lambda x: x}
+    cons = {'type':'ineq','fun':lambda x: x-1e-5}
     ops = {'maxiter':1e8}
     res = minimize(optfunc, x0, constraints=cons,options=ops)
 
