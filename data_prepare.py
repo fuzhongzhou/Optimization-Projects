@@ -37,5 +37,5 @@ mom = db.raw_sql(momentum_sql)
 mom.set_index('date', inplace=True)
 fama_dt['MOM'] = mom.momentum
 
-factors = fama_dt.join([ShrttermReversal_dt, LongtermReversal_dt, industry_dt], how='inner')
+factors = fama_dt.join([STREV_dt, LTREV_dt, industry_dt], how='inner')
 factors.to_csv('factors.csv')
