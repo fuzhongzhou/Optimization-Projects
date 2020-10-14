@@ -1,5 +1,5 @@
 from cov_est import *
-from peformance import *
+from performance import *
 import matplotlib.pyplot as plt
 pd.set_option("display.max_rows", None, "display.max_columns", None)
 
@@ -33,7 +33,7 @@ r_train = r[:train_index]
 r_test = r[train_index:]
 res_nonlinear = eval((r_train,r_test),delta)
 print('Without linear factor structure')
-print(res_nonlinear)
+display(res_nonlinear)
 
 
 ''' with linear factor structure '''
@@ -48,6 +48,6 @@ r_test = r[train_index:]
 res_linear = eval((r_train,r_test),delta,f[:train_index])
 print('-'*80)
 print('With linear factor structure')
-print(res_linear)
+display(res_linear)
 
 print(0)

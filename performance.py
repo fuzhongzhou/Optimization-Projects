@@ -103,13 +103,14 @@ def port_weight(covmat, port_type='minvar'):
     else:
         raise ValueError("port_type has to be one of ['minvar','maxdiv','riskpar']")
 
-def in_sample_eval(r, f, port_type):
+def in_sample_eval(r, f, port_type, bench_f=None):
     '''
     Evaluate different covariance estimators based on corresponding type of portfolios
     :param r: N*p matrix, in-sample return data
     :param f: N*k matrix, multiple factors
     :param port_type: type of portfolio to calculate, default to be 'minvar'
                     possible values include ['minvar','maxdiv','riskpar']
+    :param bench_f: optional single factor, default to be None
     :return: Weights and Sharpe ratios of each portfolio
     '''
 
@@ -135,7 +136,8 @@ def in_sample_eval(r, f, port_type):
     sr.append(ret_const/sig_const)
 
     # single factor
-    bench_f = r@x_const  # use minimum-variance portfolio based on constant correlation covariance as benchmark
+    if bench_f is None:
+        bench_f = r@x_const  # use benchmark portfolio based on constant correlation covariance
     cov_f = singleFactorCov(r, bench_f)
     x_f = port_weight(cov_f, port_type)
     ret_f = x_f@ret_mean
@@ -164,7 +166,7 @@ def out_sample_eval(r, weights, step_t):
     return sr
 
 
-def eval(r,step_t,f=None):
+def eval(r,step_t,f=None,bench_f=None):
 
     port_type = ['minvar','maxdiv','riskpar']
     # port_type = ['minvar', 'maxdiv']
@@ -185,7 +187,7 @@ def eval(r,step_t,f=None):
 
 
     for i, p_type in enumerate(port_type):
-        in_weights, in_sr = in_sample_eval(r_train/step_t, f, p_type)
+        in_weights, in_sr = in_sample_eval(r_train/step_t, f, p_type, bench_f)
         out_sr = out_sample_eval(r_test, in_weights, step_t)
         result.loc[:, p_type + '_in'] = in_sr
         result.loc[:, p_type + '_out'] = out_sr
