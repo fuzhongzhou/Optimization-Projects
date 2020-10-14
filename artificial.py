@@ -1,6 +1,7 @@
 from cov_est import *
 from peformance import *
 import matplotlib.pyplot as plt
+pd.set_option("display.max_rows", None, "display.max_columns", None)
 
 N = 252*2   # period
 T = 2       # Year
@@ -31,6 +32,7 @@ r = (S[1:] - S[:-1]) / S[:-1]
 r_train = r[:train_index]
 r_test = r[train_index:]
 res_nonlinear = eval((r_train,r_test),delta)
+print('Without linear factor structure')
 print(res_nonlinear)
 
 
@@ -44,6 +46,8 @@ r = f @ beta + u
 r_train = r[:train_index]
 r_test = r[train_index:]
 res_linear = eval((r_train,r_test),delta,f[:train_index])
+print('-'*80)
+print('With linear factor structure')
 print(res_linear)
 
 print(0)
