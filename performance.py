@@ -61,7 +61,7 @@ def risk_par_port(covmat):
         diff = np.sum((lhs-rhs)**2)
         return diff
 
-    assert res_check(res.x)<1e-6
+    assert res_check(res.x)<1e-3
 
     return res.x/res.x.sum()
 
