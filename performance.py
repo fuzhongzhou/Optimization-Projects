@@ -103,7 +103,7 @@ def port_weight(covmat, port_type='minvar'):
     else:
         raise ValueError("port_type has to be one of ['minvar','maxdiv','riskpar']")
 
-def in_sample_eval(r, f, port_type, bench_f=None):
+def in_sample_eval(r, step_t, f, port_type, bench_f=None):
     '''
     Evaluate different covariance estimators based on corresponding type of portfolios
     :param r: N*p matrix, in-sample return data
@@ -125,7 +125,7 @@ def in_sample_eval(r, f, port_type, bench_f=None):
     ret_sample = x_sample@ret_mean
     sig_sample = np.sqrt(x_sample.T@cov_sample@x_sample)
     weights.append(x_sample)
-    sr.append(ret_sample/sig_sample)
+    sr.append(ret_sample/sig_sample/step_t**0.5)
 
     # const correlation
     cov_const = constCorrCov(r)
@@ -133,7 +133,7 @@ def in_sample_eval(r, f, port_type, bench_f=None):
     ret_const = x_const@ret_mean
     sig_const = np.sqrt(x_const.T@cov_const@x_const)
     weights.append(x_const)
-    sr.append(ret_const/sig_const)
+    sr.append(ret_const/sig_const/step_t**0.5)
 
     # single factor
     if bench_f is None:
@@ -143,7 +143,7 @@ def in_sample_eval(r, f, port_type, bench_f=None):
     ret_f = x_f@ret_mean
     sig_f = np.sqrt(x_f.T@cov_f@x_f)
     weights.append(x_f)
-    sr.append(ret_f/sig_f)
+    sr.append(ret_f/sig_f/step_t**0.5)
 
     # multi-factor
     cov_F = multiFactorCov(r, f)
@@ -151,7 +151,7 @@ def in_sample_eval(r, f, port_type, bench_f=None):
     ret_F = x_F@ret_mean
     sig_F = np.sqrt(x_F.T@cov_F@x_F)
     weights.append(x_F)
-    sr.append(ret_F/sig_F)
+    sr.append(ret_F/sig_F/step_t**0.5)
 
     return weights, sr
 
@@ -162,7 +162,7 @@ def out_sample_eval(r, weights, step_t):
         actual_r = r@w
         total_r = np.prod(1+actual_r)**(1/(N*step_t)) - 1
         total_std = np.std(actual_r/step_t)
-        sr.append(total_r/total_std)
+        sr.append(total_r/total_std/step_t**0.5)
     return sr
 
 
@@ -187,7 +187,7 @@ def eval(r,step_t,f=None,bench_f=None):
 
 
     for i, p_type in enumerate(port_type):
-        in_weights, in_sr = in_sample_eval(r_train/step_t, f, p_type, bench_f)
+        in_weights, in_sr = in_sample_eval(r_train/step_t, step_t, f, p_type, bench_f)
         out_sr = out_sample_eval(r_test, in_weights, step_t)
         result.loc[:, p_type + '_in'] = in_sr
         result.loc[:, p_type + '_out'] = out_sr

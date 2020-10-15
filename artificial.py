@@ -33,7 +33,7 @@ r_train = r[:train_index]
 r_test = r[train_index:]
 res_nonlinear = eval((r_train,r_test),delta)
 print('Without linear factor structure')
-display(res_nonlinear)
+print(res_nonlinear)
 
 
 ''' with linear factor structure '''
@@ -48,6 +48,6 @@ r_test = r[train_index:]
 res_linear = eval((r_train,r_test),delta,f[:train_index])
 print('-'*80)
 print('With linear factor structure')
-display(res_linear)
+print(res_linear)
 
 print(0)
