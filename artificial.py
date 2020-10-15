@@ -35,6 +35,7 @@ res_nonlinear = eval((r_train,r_test),delta)
 print('Without linear factor structure')
 print(res_nonlinear)
 
+res_nonlinear.to_csv('artificial_wo_linear.csv')
 
 ''' with linear factor structure '''
 f = r[:,np.random.choice(p,k)]
@@ -50,4 +51,4 @@ print('-'*80)
 print('With linear factor structure')
 print(res_linear)
 
-print(0)
+res_linear.to_csv('artificial_w_linear.csv')
